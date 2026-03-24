@@ -1,14 +1,14 @@
 <?php
 // Configuration de la base de données
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'location_voitures');
+define('DB_NAME', 'ytape_aploc');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_PORT', '3306');
 
 // Configuration de l'application
 define('APP_NAME', 'Location de Voitures');
-define('APP_URL', 'http://localhost:8888/site');
+define('APP_URL', 'http://locauto.test');
 define('APP_VERSION', '1.0.0');
 
 // Configuration des dossiers
@@ -25,10 +25,12 @@ define('MAIL_FROM', 'contact@location-voitures.fr');
 define('MAIL_FROM_NAME', 'Location de Voitures');
 
 // Configuration des sessions
-ini_set('session.gc_maxlifetime', 3600); // 1 heure
-ini_set('session.cookie_lifetime', 3600);
-ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1);
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    ini_set('session.gc_maxlifetime', 3600); // 1 heure
+    ini_set('session.cookie_lifetime', 3600);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? '1' : '0');
+}
 
 // Configuration du débuggage
 define('DEBUG_MODE', true);
