@@ -30,6 +30,15 @@ class ReservationControlleur {
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                // Valider les données
+                if (empty($_POST['date_debut']) || empty($_POST['date_fin'])) {
+                    throw new Exception('Les dates sont obligatoires');
+                }
+                
+                if (!isset($_SESSION['id_utilisateur'])) {
+                    throw new Exception('Erreur: ID utilisateur manquant');
+                }
+                
                 $data = [
                     'date_debut' => $_POST['date_debut'],
                     'date_fin' => $_POST['date_fin'],
@@ -38,17 +47,17 @@ class ReservationControlleur {
                     'statut_reservation' => 'en attente'
                 ];
     
-                if ($this->reservationModel->creer($data)) {
-                    // Mettre à jour la disponibilité de la voiture
-                    $this->voitureModel->modifierDisponibilite($id_voiture, 0);
-                    
-                    $_SESSION['message'] = "Réservation créée avec succès";
-                    $_SESSION['message_type'] = "success";
-                    header('Location: index.php?controller=reservation&action=liste');
-                    exit();
+                if (!$this->reservationModel->creer($data)) {
+                    throw new Exception("Erreur lors de la création de la réservation");
                 }
-    
-                throw new Exception("Erreur lors de la création de la réservation");
+                
+                // Mettre à jour la disponibilité de la voiture
+                $this->voitureModel->modifierDisponibilite($id_voiture, 0);
+                    
+                $_SESSION['message'] = "Réservation créée avec succès";
+                $_SESSION['message_type'] = "success";
+                header('Location: index.php?controller=reservation&action=liste');
+                exit();
     
             } catch (Exception $e) {
                 $_SESSION['message'] = $e->getMessage();
@@ -106,13 +115,14 @@ class ReservationControlleur {
                     $id_reservation = filter_input(INPUT_POST, 'id_reservation', FILTER_VALIDATE_INT);
                     $reference = filter_input(INPUT_POST, 'reference', FILTER_SANITIZE_STRING);
                     $montant = filter_input(INPUT_POST, 'montant', FILTER_VALIDATE_FLOAT);
+                    $mode_paiement = filter_input(INPUT_POST, 'mode_paiement', FILTER_SANITIZE_STRING);
     
-                    if (!$id_reservation || !$reference || !$montant) {
+                    if (!$id_reservation || !$reference || !$montant || !$mode_paiement) {
                         throw new Exception("Données de paiement invalides");
                     }
     
                     // Finaliser la réservation
-                    if ($this->reservationModel->finaliserReservation($id_reservation, $reference, $montant)) {
+                    if ($this->reservationModel->finaliserReservation($id_reservation, $reference, $montant, $mode_paiement)) {
                         unset($_SESSION['paiement_temp']);
                         $_SESSION['message'] = "Paiement confirmé et réservation finalisée";
                         $_SESSION['message_type'] = "success";
@@ -273,7 +283,7 @@ class ReservationControlleur {
                 throw new Exception("Données de paiement invalides");
             }
     
-            if ($this->reservationModel->finaliserReservation($id_reservation, $reference, $montant)) {
+            if ($this->reservationModel->finaliserReservation($id_reservation, $reference, $montant, $mode_paiement)) {
                 unset($_SESSION['paiement_temp']);
                 $_SESSION['message'] = "Paiement confirmé et réservation finalisée";
                 $_SESSION['message_type'] = "success";

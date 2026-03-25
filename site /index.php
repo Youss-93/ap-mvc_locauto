@@ -2,7 +2,7 @@
 session_start();
 
 // Configuration
-
+require_once 'config.php';
 require_once 'modele/Database.php';
 
 // Récupération du contrôleur et de l'action

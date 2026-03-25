@@ -9,16 +9,16 @@ class Reservation {
    
    public function creer($data) {
     try {
-        $sql = "INSERT INTO reservation (date_debut, date_fin, id_client, voiture_resa, )
-                VALUES (:date_debut, :date_fin, :id_client, :voiture_resa, )";
+        $sql = "INSERT INTO reservation (date_debut, date_fin, client_resa, voiture_resa, statut_reservation)
+                VALUES (:date_debut, :date_fin, :id_client, :voiture_resa, :statut_reservation)";
         
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            ':date_debut' => $data['date_debut'],
-            ':date_fin' => $data['date_fin'],
-            ':id_client' => $data['id_client'],
-            ':voiture_resa' => $data['voiture_resa'],
-            ':statut_reservation' => $data['statut_reservation']
+            'date_debut' => $data['date_debut'],
+            'date_fin' => $data['date_fin'],
+            'id_client' => $data['id_client'],
+            'voiture_resa' => $data['voiture_resa'],
+            'statut_reservation' => $data['statut_reservation']
         ]);
     } catch (PDOException $e) {
         error_log("Erreur création réservation : " . $e->getMessage());
@@ -31,7 +31,7 @@ class Reservation {
     public function getById($id) {
         $sql = "SELECT * FROM Reservation WHERE id_reservation = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
     public function getAll() {
@@ -48,7 +48,7 @@ class Reservation {
                 WHERE r.id_reservation = :id";
                 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
 
@@ -61,7 +61,7 @@ class Reservation {
                 ORDER BY r.date_debut DESC";
                 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_utilisateur' => $id_utilisateur]);
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
         return $stmt->fetchAll();
     }
 
@@ -77,7 +77,7 @@ class Reservation {
         
         try {
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id_admin' => $id_admin]);
+            $stmt->execute(['id_admin' => $id_admin]);
             return $stmt->fetchAll();
         } catch (PDOException $e) {
             error_log($e->getMessage());
@@ -94,7 +94,7 @@ class Reservation {
                 ORDER BY r.date_debut DESC";
                 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_client' => $id_client]);
+        $stmt->execute(['id_client' => $id_client]);
         return $stmt->fetchAll();
     }
 
@@ -110,7 +110,7 @@ class Reservation {
                     WHERE r.id_reservation = :id";
             
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id' => $id_reservation]);
+            $stmt->execute(['id' => $id_reservation]);
             return $stmt->fetch();
         } catch (PDOException $e) {
             error_log($e->getMessage());
@@ -129,7 +129,7 @@ class Reservation {
                 ORDER BY r.date_debut ASC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_utilisateur' => $id_utilisateur]);
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
         return $stmt->fetchAll();
     }
 
@@ -143,7 +143,7 @@ class Reservation {
                 ORDER BY r.date_debut ASC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_utilisateur' => $id_utilisateur]);
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
         return $stmt->fetchAll();
     }
 
@@ -156,7 +156,7 @@ class Reservation {
                 ORDER BY r.date_debut DESC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_utilisateur' => $id_utilisateur]);
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
         return $stmt->fetchAll();
     }
     public function getReservationsPassées($id_utilisateur) {
@@ -169,7 +169,7 @@ class Reservation {
                 ORDER BY r.date_fin DESC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_utilisateur' => $id_utilisateur]);
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
         return $stmt->fetchAll();
     }
     public function getReservationsVoiture($id_voiture) {
@@ -180,7 +180,7 @@ class Reservation {
                 ORDER BY r.date_debut DESC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_voiture' => $id_voiture]);
+        $stmt->execute(['id_voiture' => $id_voiture]);
         return $stmt->fetchAll();
     }   
 
@@ -194,7 +194,7 @@ class Reservation {
                 ORDER BY r.date_debut ASC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_voiture' => $id_voiture]);
+        $stmt->execute(['id_voiture' => $id_voiture]);
         return $stmt->fetchAll();
     }
 
@@ -208,7 +208,7 @@ class Reservation {
                 ORDER BY r.date_debut ASC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_voiture' => $id_voiture]);
+        $stmt->execute(['id_voiture' => $id_voiture]);
         return $stmt->fetchAll();
     }
 
@@ -221,7 +221,7 @@ class Reservation {
                 ORDER BY r.date_debut DESC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_voiture' => $id_voiture]);
+        $stmt->execute(['id_voiture' => $id_voiture]);
         return $stmt->fetchAll();
     }
     public function getReservationsPasseesVoiture($id_voiture) {
@@ -234,7 +234,7 @@ class Reservation {
                 ORDER BY r.date_fin DESC";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id_voiture' => $id_voiture]);
+        $stmt->execute(['id_voiture' => $id_voiture]);
         return $stmt->fetchAll();
     }
 
@@ -246,7 +246,7 @@ class Reservation {
                     WHERE id_reservation = :id_reservation";
             
             $stmt = $this->db->prepare($sql);
-            if ($stmt->execute([':id_reservation' => $id_reservation])) {
+            if ($stmt->execute(['id_reservation' => $id_reservation])) {
                 return true;
             }
             return false;
@@ -266,7 +266,7 @@ class Reservation {
                     WHERE id_reservation = :id";
             
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([':id' => $id_reservation]);
+            return $stmt->execute(['id' => $id_reservation]);
         } catch (PDOException $e) {
             error_log($e->getMessage());
             return false;
@@ -277,31 +277,31 @@ class Reservation {
                 WHERE id_reservation = :id";
         
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':id' => $id_reservation]);
+        return $stmt->execute(['id' => $id_reservation]);
     }
     public function supprimerReservation($id_reservation) {
         $sql = "DELETE FROM Reservation 
                 WHERE id_reservation = :id";
         
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':id' => $id_reservation]);
+        return $stmt->execute(['id' => $id_reservation]);
     }
     public function supprimerReservationParVoiture($id_voiture) {
         $sql = "DELETE FROM Reservation 
                 WHERE voiture_resa = :voiture";
         
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':voiture' => $id_voiture]);
+        return $stmt->execute(['voiture' => $id_voiture]);
     }
     public function supprimerReservationParClient($id_client) {
         $sql = "DELETE FROM Reservation 
                 WHERE client_resa = :client";
         
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':client' => $id_client]);
+        return $stmt->execute(['client' => $id_client]);
     }
 
-    public function finaliserReservation($id_reservation, $reference, $montant) {
+    public function finaliserReservation($id_reservation, $reference, $montant, $mode_paiement) {
         try {
             $this->db->beginTransaction();
     
@@ -311,19 +311,19 @@ class Reservation {
                               WHERE id_reservation = :id_reservation";
             
             $stmt_reservation = $this->db->prepare($sql_reservation);
-            $stmt_reservation->execute([':id_reservation' => $id_reservation]);
+            $stmt_reservation->execute(['id_reservation' => $id_reservation]);
     
             // Création de l'enregistrement de paiement
             $sql_paiement = "INSERT INTO paiement 
-                            (reference, montant, date_paiement, reservation_id) 
+                            (paiement_resa, montant, mode_paiement, date_paiement, statut_paiement) 
                             VALUES 
-                            (:reference, :montant, NOW(), :reservation_id)";
+                            (:paiement_resa, :montant, :mode_paiement, NOW(), 'validée')";
             
             $stmt_paiement = $this->db->prepare($sql_paiement);
             $stmt_paiement->execute([
-                ':reference' => $reference,
-                ':montant' => $montant,
-                ':reservation_id' => $id_reservation
+                'paiement_resa' => $id_reservation,
+                'montant' => $montant,
+                'mode_paiement' => $mode_paiement
             ]);
     
             // Mise à jour de la disponibilité de la voiture
@@ -333,7 +333,7 @@ class Reservation {
                                  WHERE r.id_reservation = :id_reservation";
             
             $stmt_voiture = $this->db->prepare($sql_update_voiture);
-            $stmt_voiture->execute([':id_reservation' => $id_reservation]);
+            $stmt_voiture->execute(['id_reservation' => $id_reservation]);
     
             // Si tout s'est bien passé, on valide la transaction
             $this->db->commit();

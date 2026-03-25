@@ -20,8 +20,20 @@
             <p>Référence transaction : #<?= isset($paiement['reference']) ? htmlspecialchars($paiement['reference']) : 'Non générée' ?></p>
 
             <form action="index.php?controller=reservation&action=finaliser" method="POST">
+                <input type="hidden" name="id_reservation" value="<?= htmlspecialchars($paiement['id_reservation']) ?>">
                 <input type="hidden" name="reference" value="<?= htmlspecialchars($paiement['reference']) ?>">
                 <input type="hidden" name="montant" value="<?= htmlspecialchars($paiement['montant']) ?>">
+                
+                <div class="form-group mb-3">
+                    <label for="mode_paiement">Mode de paiement</label>
+                    <select class="form-control" id="mode_paiement" name="mode_paiement" required>
+                        <option value="">Choisissez un mode de paiement</option>
+                        <option value="par Carte">Carte bancaire</option>
+                        <option value="Par Virement">Virement bancaire</option>
+                        <option value="Paypal">PayPal</option>
+                    </select>
+                </div>
+                
                 <button type="submit" class="btn btn-primary">Confirmer le paiement</button>
                 <a href="index.php?controller=voiture&action=liste" class="btn btn-secondary">Annuler</a>
             </form>

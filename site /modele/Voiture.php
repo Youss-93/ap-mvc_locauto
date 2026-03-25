@@ -39,7 +39,7 @@ class Voiture {
         try {
             $sql = "SELECT * FROM voiture WHERE id_voiture = :id";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id' => $id]);
+            $stmt->execute(['id' => $id]);
             return $stmt->fetch();
         } catch (PDOException $e) {
             error_log($e->getMessage());
@@ -68,7 +68,7 @@ class Voiture {
     public function getVoiture($id) {
         $sql = "SELECT * FROM Voiture WHERE id_voiture = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
 
@@ -113,11 +113,11 @@ class Voiture {
     }
 
     public function modifierDisponibilite($id, $disponibilite) {
-        $sql = "UPDATE Voiture SET disponibilité = :disponibilité WHERE id_voiture = :id";
+        $sql = "UPDATE Voiture SET disponibilité = :disponibilite WHERE id_voiture = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            ':id' => $id,
-            ':disponibilite' => $disponibilite
+            'id' => $id,
+            'disponibilite' => $disponibilite
         ]);
     }
     
@@ -134,7 +134,7 @@ class Voiture {
             // 2. Vérifier si la voiture a des réservations en cours
             $sql = "SELECT COUNT(*) FROM reservation WHERE voiture_resa = :id AND statut_reservation != 'annulée'";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':id' => $id]);
+            $stmt->execute(['id' => $id]);
             $hasReservations = $stmt->fetchColumn() > 0;
     
             if ($hasReservations) {
@@ -149,7 +149,7 @@ class Voiture {
             // 4. Supprimer la voiture
             $sql = "DELETE FROM voiture WHERE id_voiture = :id";
             $stmt = $this->db->prepare($sql);
-            $success = $stmt->execute([':id' => $id]);
+            $success = $stmt->execute(['id' => $id]);
     
             if ($success) {
                 $this->db->commit();
@@ -169,7 +169,7 @@ class Voiture {
     public function getImage($id) {
         $sql = "SELECT image_loc FROM voiture WHERE id_voiture = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $stmt->execute(['id' => $id]);
         $image = $stmt->fetchColumn();
         
         // Vérifier si l'image existe

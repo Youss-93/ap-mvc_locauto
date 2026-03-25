@@ -171,6 +171,11 @@ class VoitureControlleur {
                     throw new Exception('Tous les champs sont obligatoires');
                 }
     
+                // Récupérer l'ID de l'admin depuis la session
+                $id_admin = $_SESSION['id_utilisateur'] ?? null;
+                if (!$id_admin) {
+                    throw new Exception('ID admin introuvable');
+                }
                 
                 $image_loc = '';
                 if (isset($_FILES['image_loc']) && $_FILES['image_loc']['error'] === 0) {
@@ -182,12 +187,13 @@ class VoitureControlleur {
     
                 // Créer la voiture
                 $success = $this->voitureModel->ajouter([
+                    'id_admin' => $id_admin,
                     'marque' => $marque,
                     'modele' => $modele,
-                    'annee' => $annee,          // Change 'année'
+                    'annee' => $annee,
                     'prix_jour' => $prix_jour,
                     'caution' => $caution,
-                    'disponibilite' => true,     // Change 'disponibilité'
+                    'disponibilite' => true,
                     'image_loc' => $image_loc
                 ]);
     
@@ -269,7 +275,7 @@ class VoitureControlleur {
 public function uploadImage($file) {
     try {
         // Définir le chemin de destination
-        $target_dir = "assets/photos/";
+        $target_dir = "assets/photos/voitures/";
         
         // Vérifier si le dossier existe, sinon le créer
         if (!file_exists($target_dir)) {
