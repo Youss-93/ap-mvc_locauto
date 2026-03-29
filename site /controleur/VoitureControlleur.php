@@ -12,6 +12,12 @@ class VoitureControlleur {
 
     public function liste() {
         $voitures = $this->voitureModel->getListe();
+        
+        // Charger les catégories pour chaque voiture
+        foreach($voitures as &$voiture) {
+            $voiture['categories'] = $this->categorieModel->getCategoriesVoiture($voiture['id_voiture']);
+        }
+        
         require_once 'vue/voiture.liste.php';
     }
 
@@ -35,6 +41,9 @@ class VoitureControlleur {
             header('Location: index.php?controller=voiture&action=liste');
             exit();
         }
+
+        // Charger les catégories de la voiture
+        $voiture['categories'] = $this->categorieModel->getCategoriesVoiture($id);
 
         // Afficher la vue
         require_once 'vue/voiture.detail.php';

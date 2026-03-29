@@ -43,6 +43,16 @@
                                         <?= $voiture['disponibilité'] ? 'Disponible' : 'Non disponible' ?>
                                     </span>
                                 </li>
+                                <?php if(!empty($voiture['categories'])): ?>
+                                    <li class="list-group-item">
+                                        <strong>Catégories :</strong><br>
+                                        <?php foreach($voiture['categories'] as $categorie): ?>
+                                            <span class="badge bg-info me-2 mt-2">
+                                                <?= htmlspecialchars($categorie['libelle_categorie']) ?>
+                                            </span>
+                                        <?php endforeach; ?>
+                                    </li>
+                                <?php endif; ?>
                             </ul>
 
                             <div class="mt-4">

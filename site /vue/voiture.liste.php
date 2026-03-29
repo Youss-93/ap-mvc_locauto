@@ -33,6 +33,16 @@
                             Vérification à la réservation
                         </span>
                     </p>
+                    <?php if(!empty($voiture['categories'])): ?>
+                        <div class="categories mt-2">
+                            <strong>Catégories :</strong><br>
+                            <?php foreach($voiture['categories'] as $categorie): ?>
+                                <span class="badge bg-info">
+                                    <?= htmlspecialchars($categorie['libelle_categorie']) ?>
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="car-actions">
