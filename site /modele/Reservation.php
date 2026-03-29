@@ -388,26 +388,17 @@ class Reservation {
         }
     }
 
-    public function mesReservations() {
-        // Vérifier si l'utilisateur est connecté
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: index.php?controller=utilisateur&action=login');
-            exit();
-        }
-    
-        // Vérifier si l'utilisateur est un admin
-        if ($_SESSION['role'] === 'admin') {
-            $_SESSION['message'] = "Les administrateurs ne peuvent pas effectuer de réservations.";
-            $_SESSION['message_type'] = 'error';
-            header('Location: index.php');
-            exit();
-        }
-    
-        // Récupérer les réservations de l'utilisateur
-        $reservations = $this->reservationModel->getReservationsUtilisateur($_SESSION['user_id']);
+    public function mesReservations($id_utilisateur) {
+        // Récupérer les réservations de l'utilisateur (non annulées)
+        $sql = "SELECT r.*, v.marque, v.modele, v.image_loc, v.prix_jour
+                FROM Reservation r
+                JOIN Voiture v ON r.voiture_resa = v.id_voiture
+                WHERE r.client_resa = :id_utilisateur AND r.statut_reservation != 'annulée'
+                ORDER BY r.date_debut DESC";
         
-        // Passer les données à la vue
-        require_once 'vue/resa.liste.php';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id_utilisateur' => $id_utilisateur]);
+        return $stmt->fetchAll();
     }
 
     // Update

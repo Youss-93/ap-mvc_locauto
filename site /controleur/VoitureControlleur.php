@@ -254,46 +254,22 @@ class VoitureControlleur {
         $annee = $_GET['année'] ?? '';
         $prix_jour = $_GET['prix_jour'] ?? '';
 
-        $voitures = $this->voitureModel->rechercher($marque, $modele, $annee, $prix_jour);
+        $voitures = $this->voitureModel->getListe();
+        
+        // Charger les catégories pour chaque voiture
+        foreach($voitures as &$voiture) {
+            $voiture['categories'] = $this->categorieModel->getCategoriesVoiture($voiture['id_voiture']);
+        }
+        
         require_once 'vue/voiture.liste.php';
     }
+    
+    // Méthode supprimée - utiliser le contrôleur de réservation
+    /*
     public function reserver() {
-        $this->verifierUtilisateur();
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_voiture = $_POST['id_voiture'] ?? null;
-            $date_debut = $_POST['date_debut'] ?? null;
-            $date_fin = $_POST['date_fin'] ?? null;
-            $prix_total = $_POST['prix_total'] ?? null;
-            $id_client = $_SESSION['id_utilisateur'] ?? null;
-            $statut = 'en attente'; 
-            $id_reservation = $this->reservationModel->creer($id_client, $id_voiture, $date_debut, $date_fin, $prix_total, $statut);
-            if ($id_reservation) {
-                $_SESSION['message'] = 'Réservation créée avec succès';
-                $_SESSION['message_type'] = 'success';
-            } else {
-                $_SESSION['message'] = 'Erreur lors de la création de la réservation';
-                $_SESSION['message_type'] = 'danger';
-            }
-            header('Location: index.php?controller=voiture&action=liste');
-            exit();
-        }
-        $id = $_GET['id'] ?? null;
-        if (!$id) {
-            $_SESSION['message'] = 'Identifiant de voiture manquant';
-            $_SESSION['message_type'] = 'error';
-            header('Location: index.php?controller=voiture&action=liste');
-            exit();
-        }
-        $voiture = $this->voitureModel->getVoiture($id);
-        if (!$voiture) {
-            $_SESSION['message'] = 'Voiture non trouvée';
-            $_SESSION['message_type'] = 'error';
-            header('Location: index.php?controller=voiture&action=liste');
-            exit();
-        }
-        require_once 'vue/voiture.reserver.php';
+        ...
     }
+    */
   
 public function uploadImage($file) {
     try {
@@ -324,30 +300,15 @@ public function uploadImage($file) {
     }
 }
 
-public function ajouterAvecImage($data, $image_path) {
-    try {
-        // Copier l'image depuis le dossier source
-        $target_dir = "assets/photos/";
-        $filename = basename($image_path);
-        $new_path = $target_dir . $filename;
-        
-        // Créer le dossier si nécessaire
-        if (!file_exists($target_dir)) {
-            mkdir($target_dir, 0755, true);
+    // Méthode utilitaire pour charger l'image
+    public function gererImage($data) {
+        // Traitement de l'image si fournie
+        if (isset($_FILES['image_loc']) && $_FILES['image_loc']['error'] === 0) {
+            $image_loc = $this->uploadImage($_FILES['image_loc']);
+            if ($image_loc) {
+                $data['image_loc'] = $image_loc;
+            }
         }
-        
-        // Copier le fichier
-        if (copy($image_path, $new_path)) {
-            $data['image_loc'] = $new_path;
-            return $this->ajouter($data);
-        }
-        
-        return false;
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        return false;
+        return $data;
     }
-}
-
-
 }

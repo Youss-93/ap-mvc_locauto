@@ -9,6 +9,15 @@ class Utilisateur{
 
     public function creer($nom, $prenom, $email, $mdp, $tel, $role = 'client') {
         try {
+            // Vérifier que l'email n'existe pas déjà
+            if ($this->emailExists($email)) {
+                error_log("Email déjà utilisé: $email");
+                return false;
+            }
+            
+            // Hacher le mot de passe avec bcrypt
+            $mdp_hash = password_hash($mdp, PASSWORD_BCRYPT, ['cost' => 12]);
+            
             $sql = "INSERT INTO utilisateur (
                 nom_utilisateur, 
                 prenom_utilisateur, 
@@ -23,7 +32,7 @@ class Utilisateur{
                 $nom,
                 $prenom,
                 $email,
-                $mdp, // Mot de passe non hashé
+                $mdp_hash, // Mot de passe hashé
                 $tel,
                 $role
             ]);
@@ -72,13 +81,15 @@ class Utilisateur{
     
     public function verifierLogin($email, $mdp) {
         try {
-            $sql = "SELECT * FROM utilisateur WHERE email = ? AND mdp_utilisateur = ?";
+            // Récupérer l'utilisateur par email uniquement
+            $sql = "SELECT * FROM utilisateur WHERE email = :email";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$email, $mdp]);
+            $stmt->execute([':email' => $email]);
             
             $utilisateur = $stmt->fetch();
             
-            if ($utilisateur) {
+            // Vérifier que l'utilisateur existe et que le mot de passe est correct
+            if ($utilisateur && password_verify($mdp, $utilisateur['mdp_utilisateur'])) {
                 return $utilisateur;
             }
             return false;
