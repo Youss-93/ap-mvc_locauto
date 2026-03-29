@@ -29,8 +29,8 @@
                     <p>Prix/jour : <?= htmlspecialchars($voiture['prix_jour']) ?>€</p>
                     <p>Caution : <?= htmlspecialchars($voiture['caution']) ?>€</p>
                     <p class="status">
-                        <span class="badge <?= $voiture['disponibilité'] ? 'bg-success' : 'bg-danger' ?>">
-                            <?= $voiture['disponibilité'] ? 'Disponible' : 'Non disponible' ?>
+                        <span class="badge bg-success">
+                            Vérification à la réservation
                         </span>
                     </p>
                 </div>
@@ -43,24 +43,16 @@
                             <i class="fas fa-edit"></i> Modifier
                         </a>
                         
-                        <?php if($voiture['disponibilité']): ?>
-                            <a href="index.php?controller=voiture&action=supprimer&id=<?= $voiture['id_voiture'] ?>" 
-                               class="btn btn-danger"
-                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette voiture ?');">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </a>
-                        <?php endif; ?>
+                        <a href="index.php?controller=voiture&action=supprimer&id=<?= $voiture['id_voiture'] ?>" 
+                           class="btn btn-danger"
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette voiture ?');">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
                     <?php elseif(isset($_SESSION['role']) && $_SESSION['role'] === 'client'): ?>
-                        <?php if($voiture['disponibilité']): ?>
-                            <a href="index.php?controller=reservation&action=creer&id=<?= $voiture['id_voiture'] ?>" 
-                               class="btn btn-success">
-                                <i class="fas fa-calendar-plus"></i> Réserver
-                            </a>
-                        <?php else: ?>
-                            <button class="btn btn-secondary" disabled>
-                                Non disponible
-                            </button>
-                        <?php endif; ?>
+                        <a href="index.php?controller=reservation&action=creer&id=<?= $voiture['id_voiture'] ?>" 
+                           class="btn btn-success">
+                            <i class="fas fa-calendar-plus"></i> Réserver
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>

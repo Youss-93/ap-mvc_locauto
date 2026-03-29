@@ -6,7 +6,45 @@ class Reservation {
         $this->db = Database::getConnection();
     }
 
-   
+    /**
+     * Vérifie s'il y a un chevauchement de dates pour une voiture
+     * Retourne true s'il existe un conflit, false sinon
+     */
+    public function verifierChevauchement($id_voiture, $date_debut, $date_fin, $id_reservation_exclue = null) {
+        try {
+            $sql = "SELECT COUNT(*) as nb_conflits FROM reservation r
+                    WHERE r.voiture_resa = :id_voiture
+                    AND r.statut_reservation IN ('en attente', 'confirmée')
+                    AND (
+                        (r.date_debut < :date_fin AND r.date_fin > :date_debut)
+                    )";
+            
+            // Exclure la réservation actuelle si fournie
+            if ($id_reservation_exclue) {
+                $sql .= " AND r.id_reservation != :id_resa";
+            }
+            
+            $stmt = $this->db->prepare($sql);
+            $params = [
+                'id_voiture' => $id_voiture,
+                'date_debut' => $date_debut,
+                'date_fin' => $date_fin
+            ];
+            
+            if ($id_reservation_exclue) {
+                $params['id_resa'] = $id_reservation_exclue;
+            }
+            
+            $stmt->execute($params);
+            $result = $stmt->fetch();
+            
+            return $result['nb_conflits'] > 0;
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
    public function creer($data) {
     try {
         $sql = "INSERT INTO reservation (date_debut, date_fin, client_resa, voiture_resa, statut_reservation)

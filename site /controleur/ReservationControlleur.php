@@ -39,6 +39,11 @@ class ReservationControlleur {
                     throw new Exception('Erreur: ID utilisateur manquant');
                 }
                 
+                // Vérifier les chevauchements de dates
+                if ($this->reservationModel->verifierChevauchement($id_voiture, $_POST['date_debut'], $_POST['date_fin'])) {
+                    throw new Exception("Cette voiture n'est pas disponible pour les dates demandées. Veuillez sélectionner des dates différentes.");
+                }
+                
                 $data = [
                     'date_debut' => $_POST['date_debut'],
                     'date_fin' => $_POST['date_fin'],
@@ -50,9 +55,6 @@ class ReservationControlleur {
                 if (!$this->reservationModel->creer($data)) {
                     throw new Exception("Erreur lors de la création de la réservation");
                 }
-                
-                // Mettre à jour la disponibilité de la voiture
-                $this->voitureModel->modifierDisponibilite($id_voiture, 0);
                     
                 $_SESSION['message'] = "Réservation créée avec succès";
                 $_SESSION['message_type'] = "success";

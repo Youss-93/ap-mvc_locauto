@@ -53,16 +53,46 @@ class Voiture {
         return $stmt->fetchAll();
     }
 
-    public function getListeDispo () {
-        $sql = "SELECT * FROM voiture WHERE disponibilité = TRUE";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll();
+    /**
+     * Récupère les voitures disponibles (sans réservations confirmées)
+     */
+    public function getListeDispo() {
+        $sql = "SELECT DISTINCT v.* FROM voiture v
+                LEFT JOIN reservation r ON v.id_voiture = r.voiture_resa 
+                AND r.statut_reservation IN ('en attente', 'confirmée')
+                AND r.date_fin > NOW()
+                WHERE r.id_reservation IS NULL
+                ORDER BY v.id_voiture ASC";
+        
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        }
     }
 
-    public function getListeNonDispo () {
-        $sql = "SELECT * FROM voiture WHERE disponibilité = FALSE";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll();
+    /**
+     * Récupère les voitures non disponibles (avec au moins une réservation active)
+     */
+    public function getListeNonDispo() {
+        $sql = "SELECT DISTINCT v.* FROM voiture v
+                INNER JOIN reservation r ON v.id_voiture = r.voiture_resa 
+                AND r.statut_reservation IN ('en attente', 'confirmée')
+                AND r.date_fin > NOW()
+                ORDER BY v.id_voiture ASC";
+        
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        }
+    }
     }
 
     public function getVoiture($id) {
