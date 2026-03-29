@@ -58,6 +58,7 @@ class Reservation {
                 FROM reservation r
                 JOIN voiture v ON r.voiture_resa = v.id_voiture
                 WHERE r.client_resa = :id_utilisateur
+                AND r.statut_reservation != 'annulée'
                 ORDER BY r.date_debut DESC";
                 
         $stmt = $this->db->prepare($sql);
