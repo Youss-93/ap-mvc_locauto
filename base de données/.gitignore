@@ -1,3 +1,10 @@
+# Fichiers plaintext avec mots de passe non sécurisés
 ytape_aploc.sql
 LOC.sql
-*.sql
+update_passwords_bcrypt.sql
+
+# Scripts de génération (exclus du repo)
+generate_hashed_passwords.php
+
+# Fichiers Apple
+._*
