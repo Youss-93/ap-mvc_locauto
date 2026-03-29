@@ -55,8 +55,7 @@ CREATE TABLE Paiement (
 CREATE TABLE Categorie (
     id_categorie INT AUTO_INCREMENT PRIMARY KEY,
     libelle_categorie VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    description TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Table de liaison Voiture_Categorie (Association 1,N <-> 1,N)

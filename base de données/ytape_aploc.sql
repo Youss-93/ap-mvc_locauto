@@ -223,20 +223,19 @@ INSERT INTO `Voiture` (`id_voiture`, `id_admin`, `modele`, `marque`, `année`, `
 CREATE TABLE `Categorie` (
   `id_categorie` int NOT NULL,
   `libelle_categorie` varchar(100) NOT NULL,
-  `description` text,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `Categorie`
 --
 
-INSERT INTO `Categorie` (`id_categorie`, `libelle_categorie`, `description`, `created_at`) VALUES
-(1, 'SUV', 'Véhicules de type SUV/4x4', '2025-04-29 13:18:00'),
-(2, 'Luxe', 'Véhicules haut de gamme', '2025-04-29 13:18:00'),
-(3, 'Économique', 'Véhicules économes en carburant', '2025-04-29 13:18:00'),
-(4, 'Sport', 'Véhicules haute performance', '2025-04-29 13:18:00'),
-(5, 'Familial', 'Véhicules spacieux pour familles', '2025-04-29 13:18:00');
+INSERT INTO `Categorie` (`id_categorie`, `libelle_categorie`, `description`) VALUES
+(1, 'SUV', 'Véhicules de type SUV/4x4'),
+(2, 'Luxe', 'Véhicules haut de gamme'),
+(3, 'Économique', 'Véhicules économes en carburant'),
+(4, 'Sport', 'Véhicules haute performance'),
+(5, 'Familial', 'Véhicules spacieux pour familles');
 
 -- --------------------------------------------------------
 
