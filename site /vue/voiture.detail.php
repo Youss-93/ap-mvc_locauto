@@ -14,12 +14,16 @@
             <div class="card">
                 <div class="row no-gutters">
                     <div class="col-md-4">
-                        <?php if($voiture['image_loc']): ?>
-                            <img src="<?= htmlspecialchars($voiture['image_loc']) ?>" 
+                        <?php 
+                            $imagePath = 'assets/photos/voitures/' . ($voiture['image_loc'] ?? 'default.jpg');
+                            $fullPath = dirname(__DIR__) . '/' . $imagePath;
+                        ?>
+                        <?php if($voiture['image_loc'] && file_exists($fullPath)): ?>
+                            <img src="<?= htmlspecialchars($imagePath) ?>" 
                                  class="card-img" 
                                  alt="<?= htmlspecialchars($voiture['marque'] . ' ' . $voiture['modele']) ?>">
                         <?php else: ?>
-                            <img src="assets/photos/" 
+                            <img src="assets/photos/voitures/default.jpg" 
                                  class="card-img" 
                                  alt="Image par défaut">
                         <?php endif; ?>

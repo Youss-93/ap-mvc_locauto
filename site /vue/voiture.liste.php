@@ -14,8 +14,12 @@
         <?php foreach($voitures as $voiture): ?>
             <div class="car-card">
                 <div class="car-image">
-                    <?php if(!empty($voiture['image_loc']) && file_exists($voiture['image_loc'])): ?>
-                        <img src="<?= htmlspecialchars($voiture['image_loc']) ?>" 
+                    <?php 
+                        $imagePath = 'assets/photos/voitures/' . ($voiture['image_loc'] ?? 'default.jpg');
+                        $fullPath = dirname(__DIR__) . '/' . $imagePath;
+                    ?>
+                    <?php if(!empty($voiture['image_loc']) && file_exists($fullPath)): ?>
+                        <img src="<?= htmlspecialchars($imagePath) ?>" 
                              alt="<?= htmlspecialchars($voiture['marque'] . ' ' . $voiture['modele']) ?>">
                     <?php else: ?>
                         <img src="assets/photos/voitures/default.jpg" 

@@ -13,7 +13,7 @@ define('APP_VERSION', '1.0.0');
 
 // Configuration des dossiers
 define('ROOT_PATH', dirname(__DIR__));
-define('UPLOAD_PATH', ROOT_PATH . '/assets/images/voitures/');
+define('UPLOAD_PATH', ROOT_PATH . '/assets/photos/voitures/');
 define('MAX_FILE_SIZE', 20971520); // 20MB en bytes
 
 // Configuration des emails
