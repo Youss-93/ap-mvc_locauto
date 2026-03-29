@@ -1,4 +1,10 @@
-<?php require_once 'vue/header.php'; ?>
+<?php 
+require_once 'vue/header.php';
+
+// Charger les catégories disponibles
+$categorieModel = new Categorie();
+$categories = $categorieModel->getAll();
+?>
 
 <div class="container">
     <h1>Ajouter une nouvelle voiture</h1>
@@ -37,11 +43,22 @@
             </div>
 
             <div class="form-group mb-3">
-                <label for="image">Image de la voiture</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/jpeg,image/png" required>
+                <label for="image_loc">Image de la voiture</label>
+                <input type="file" class="form-control" id="image_loc" name="image_loc" accept="image/jpeg,image/png" required>
                 <small class="form-text text-muted">Formats acceptés : JPG, JPEG, PNG</small>
             </div>
-    
+
+            <div class="form-group">
+                <label for="categories">Catégories de la voiture :</label>
+                <select id="categories" name="categories[]" multiple class="form-control" required>
+                    <?php foreach($categories as $categorie): ?>
+                        <option value="<?= $categorie['id_categorie'] ?>">
+                            <?= htmlspecialchars($categorie['libelle_categorie']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="form-text text-muted">Vous pouvez sélectionner plusieurs catégories (Ctrl+Clic ou Cmd+Clic)</small>
+            </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Ajouter la voiture</button>

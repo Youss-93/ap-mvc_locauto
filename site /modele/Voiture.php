@@ -19,16 +19,19 @@ class Voiture {
                     VALUES (:id_admin, :modele, :marque, :annee, :prix_jour, :caution, :disponibilite, :image_loc)";
             
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([
-                ':id_admin' => $data['id_admin'],
-                ':modele' => $data['modele'],
-                ':marque' => $data['marque'],
-                ':annee' => $data['annee'],
-                ':prix_jour' => $data['prix_jour'],
-                ':caution' => $data['caution'],
-                ':disponibilite' => $data['disponibilite'] ?? true,
-                ':image_loc' => $data['image_loc']
+            $success = $stmt->execute([
+                'id_admin' => $data['id_admin'],
+                'modele' => $data['modele'],
+                'marque' => $data['marque'],
+                'annee' => $data['annee'],
+                'prix_jour' => $data['prix_jour'],
+                'caution' => $data['caution'],
+                'disponibilite' => $data['disponibilite'] ?? true,
+                'image_loc' => $data['image_loc']
             ]);
+            
+            // Retourner l'ID du dernier véhicule inséré
+            return $success ? $this->db->lastInsertId() : false;
         } catch (PDOException $e) {
             error_log($e->getMessage());
             return false;
@@ -93,7 +96,7 @@ class Voiture {
             return [];
         }
     }
-    }
+    
 
     public function getVoiture($id) {
         $sql = "SELECT * FROM Voiture WHERE id_voiture = :id";

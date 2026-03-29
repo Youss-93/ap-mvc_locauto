@@ -1,10 +1,13 @@
 <?php
 class VoitureControlleur {
     private $voitureModel;
+    private $categorieModel;
 
     public function __construct() {
         require_once 'modele/Voiture.php';
+        require_once 'modele/Categorie.php';
         $this->voitureModel = new Voiture();
+        $this->categorieModel = new Categorie();
     }
 
     public function liste() {
@@ -170,6 +173,12 @@ class VoitureControlleur {
                 if (empty($marque) || empty($modele) || !$annee || !$prix_jour || !$caution) {
                     throw new Exception('Tous les champs sont obligatoires');
                 }
+
+                // Récupérer et valider les catégories
+                $categories = isset($_POST['categories']) ? array_map('intval', (array)$_POST['categories']) : [];
+                if (empty($categories)) {
+                    throw new Exception('Vous devez sélectionner au moins une catégorie');
+                }
     
                 // Récupérer l'ID de l'admin depuis la session
                 $id_admin = $_SESSION['id_utilisateur'] ?? null;
@@ -185,8 +194,8 @@ class VoitureControlleur {
                     }
                 }
     
-                // Créer la voiture
-                $success = $this->voitureModel->ajouter([
+                // Créer la voiture et récupérer son ID
+                $id_voiture = $this->voitureModel->ajouter([
                     'id_admin' => $id_admin,
                     'marque' => $marque,
                     'modele' => $modele,
@@ -197,8 +206,13 @@ class VoitureControlleur {
                     'image_loc' => $image_loc
                 ]);
     
-                if (!$success) {
+                if (!$id_voiture) {
                     throw new Exception('Erreur lors de l\'ajout dans la base de données');
+                }
+
+                // Ajouter les catégories à la voiture
+                foreach ($categories as $id_categorie) {
+                    $this->categorieModel->ajouterAVoiture($id_voiture, $id_categorie);
                 }
     
                 $_SESSION['message'] = 'Voiture ajoutée avec succès';
@@ -212,7 +226,7 @@ class VoitureControlleur {
                 $voiture = [
                     'marque' => $marque ?? '',
                     'modele' => $modele ?? '',
-                    'annee' => $annee ?? '',     // Changed 'année'
+                    'annee' => $annee ?? '',
                     'prix_jour' => $prix_jour ?? '',
                     'caution' => $caution ?? ''
                 ];
