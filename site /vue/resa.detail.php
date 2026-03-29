@@ -38,7 +38,7 @@
                         Retour à la liste
                     </a>
                     
-                    <?php if($reservation['statut_reservation'] === 'en attente'): ?>
+                    <?php if($reservation['statut_reservation'] === 'en attente' && $_SESSION['role'] === 'client'): ?>
                         <a href="index.php?controller=paiement&action=effectuer&id=<?= $reservation['id_reservation'] ?>" 
                            class="btn btn-primary">
                             Payer maintenant
