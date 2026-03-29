@@ -214,6 +214,77 @@ INSERT INTO `Voiture` (`id_voiture`, `id_admin`, `modele`, `marque`, `année`, `
 (124, 4, 'Toyota Supra', 'Toyota', 2021, 250.00, 2500.00, 1, 'toyota_supra.jpg'),
 (125, 5, 'Audi RS6', 'Audi', 2022, 400.00, 3500.00, 0, 'audi_rs6.jpg');
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Categorie`
+--
+
+CREATE TABLE `Categorie` (
+  `id_categorie` int NOT NULL,
+  `libelle_categorie` varchar(100) NOT NULL,
+  `description` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `Categorie`
+--
+
+INSERT INTO `Categorie` (`id_categorie`, `libelle_categorie`, `description`, `created_at`) VALUES
+(1, 'SUV', 'Véhicules de type SUV/4x4', '2025-04-29 13:18:00'),
+(2, 'Luxe', 'Véhicules haut de gamme', '2025-04-29 13:18:00'),
+(3, 'Économique', 'Véhicules économes en carburant', '2025-04-29 13:18:00'),
+(4, 'Sport', 'Véhicules haute performance', '2025-04-29 13:18:00'),
+(5, 'Familial', 'Véhicules spacieux pour familles', '2025-04-29 13:18:00');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Voiture_Categorie`
+--
+
+CREATE TABLE `Voiture_Categorie` (
+  `id_voiture` int NOT NULL,
+  `id_categorie` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `Voiture_Categorie`
+--
+
+INSERT INTO `Voiture_Categorie` (`id_voiture`, `id_categorie`) VALUES
+(101, 2),
+(102, 2),
+(103, 2),
+(104, 2),
+(105, 2),
+(106, 2),
+(107, 2),
+(107, 1),
+(108, 1),
+(110, 1),
+(120, 1),
+(102, 4),
+(103, 4),
+(104, 4),
+(106, 4),
+(111, 4),
+(113, 4),
+(114, 4),
+(121, 4),
+(122, 4),
+(125, 4),
+(109, 3),
+(109, 5),
+(115, 3),
+(115, 5),
+(117, 3),
+(118, 4),
+(119, 4),
+(123, 3),
+(124, 4);
+
 --
 -- Index pour les tables déchargées
 --
@@ -248,6 +319,20 @@ ALTER TABLE `Voiture`
   ADD KEY `id_admin` (`id_admin`);
 
 --
+-- Index pour la table `Categorie`
+--
+ALTER TABLE `Categorie`
+  ADD PRIMARY KEY (`id_categorie`),
+  ADD UNIQUE KEY `libelle_categorie` (`libelle_categorie`);
+
+--
+-- Index pour la table `Voiture_Categorie`
+--
+ALTER TABLE `Voiture_Categorie`
+  ADD PRIMARY KEY (`id_voiture`,`id_categorie`),
+  ADD KEY `id_categorie` (`id_categorie`);
+
+--
 -- Contraintes pour les tables déchargées
 --
 
@@ -269,6 +354,14 @@ ALTER TABLE `Reservation`
 --
 ALTER TABLE `Voiture`
   ADD CONSTRAINT `voiture_ibfk_1` FOREIGN KEY (`id_admin`) REFERENCES `Utilisateur` (`id_utilisateur`) ON DELETE SET NULL;
+
+--
+-- Contraintes pour la table `Voiture_Categorie`
+--
+ALTER TABLE `Voiture_Categorie`
+  ADD CONSTRAINT `voiture_categorie_ibfk_1` FOREIGN KEY (`id_voiture`) REFERENCES `Voiture` (`id_voiture`) ON DELETE CASCADE,
+  ADD CONSTRAINT `voiture_categorie_ibfk_2` FOREIGN KEY (`id_categorie`) REFERENCES `Categorie` (`id_categorie`) ON DELETE CASCADE;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -51,6 +51,23 @@ CREATE TABLE Paiement (
     FOREIGN KEY (paiement_resa) REFERENCES Reservation(id_reservation) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Table Categorie
+CREATE TABLE Categorie (
+    id_categorie INT AUTO_INCREMENT PRIMARY KEY,
+    libelle_categorie VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table de liaison Voiture_Categorie (Association 1,N <-> 1,N)
+CREATE TABLE Voiture_Categorie (
+    id_voiture INT NOT NULL,
+    id_categorie INT NOT NULL,
+    PRIMARY KEY (id_voiture, id_categorie),
+    FOREIGN KEY (id_voiture) REFERENCES Voiture(id_voiture) ON DELETE CASCADE,
+    FOREIGN KEY (id_categorie) REFERENCES Categorie(id_categorie) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 --Insertion dans la table utilisateur 
 INSERT INTO Utilisateur (nom_utilisateur, prenom_utilisateur, email, mdp_utilisateur, num_tel, role_utilisateur) VALUES
@@ -172,3 +189,48 @@ INSERT INTO Paiement (paiement_resa, montant, mode_paiement, statut_paiement, da
 (23, 850.00, 'par Carte', 'échoué', '2024-06-08 13:30:00'),
 (24, 1250.00, 'Paypal', 'validée', '2024-06-10 14:00:00'),
 (25, 2000.00, 'Par Virement', 'validée', '2024-06-12 15:00:00');
+
+-- Insertion dans la table Categorie
+INSERT INTO Categorie (libelle_categorie, description) VALUES
+('SUV', 'Véhicules de type SUV/4x4'),
+('Luxe', 'Véhicules haut de gamme'),
+('Économique', 'Véhicules économes en carburant'),
+('Sport', 'Véhicules haute performance'),
+('Familial', 'Véhicules spacieux pour familles');
+
+-- Insertion dans la table Voiture_Categorie (liaisons voiture-categorie)
+INSERT INTO Voiture_Categorie (id_voiture, id_categorie) VALUES
+-- Catégorie Luxe
+(1, 2),
+(2, 2),
+(3, 2),
+(4, 2),
+(5, 2),
+(6, 2),
+(7, 2),
+-- Catégorie SUV
+(7, 1),
+(8, 1),
+(10, 1),
+(20, 1),
+-- Catégorie Sport
+(2, 5),
+(3, 5),
+(4, 5),
+(6, 5),
+(11, 5),
+(13, 5),
+(14, 5),
+(21, 5),
+(22, 5),
+(25, 5),
+-- Catégorie Familial et Économique
+(9, 3),
+(9, 4),
+(15, 3),
+(15, 4),
+(17, 3),
+(18, 4),
+(19, 4),
+(23, 3),
+(24, 4);
