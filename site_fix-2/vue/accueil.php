@@ -1,13 +1,4 @@
-<!DOCTYPE html>
 <?php require_once 'vue/header.php'; ?>
-
-<html>
-<head>
-    <title>Location de voitures</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
 
 
     <div class="container">
@@ -28,6 +19,4 @@
             <?php endforeach; ?>
         </div>
     </div>
-</body>
-</html>
 <?php require_once 'vue/footer.php'; ?>

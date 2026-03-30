@@ -28,10 +28,19 @@ foreach ($test_files as $test_file) {
     echo "Exécution: $class_name\n";
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
-    // Inclut le fichier de test
-    $output = shell_exec("php " . escapeshellarg($file_path) . " 2>&1");
-    echo $output;
+    // Exécute le fichier de test et récupère aussi son code de sortie
+    $command = "php " . escapeshellarg($file_path) . " 2>&1";
+    $commandOutput = [];
+    $exitCode = 0;
+    exec($command, $commandOutput, $exitCode);
+    $output = implode("\n", $commandOutput);
+
+    echo $output . "\n";
     echo "\n";
+
+    if ($exitCode !== 0 || stripos($output, 'Fatal error') !== false) {
+        $global_status = false;
+    }
     
     // Extrait le nombre de tests et de réussi
     if (preg_match('/Résultat:\s+(\d+)\/(\d+)\s+tests\s+passés/', $output, $matches)) {

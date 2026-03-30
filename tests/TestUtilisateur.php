@@ -4,9 +4,27 @@
  * Focus sur la sécurité des mots de passe
  */
 
-require_once __DIR__ . '/../site /config.php';
-require_once __DIR__ . '/../site /modele/Utilisateur.php';
-require_once __DIR__ . '/../site /modele/Database.php';
+$siteRootCandidates = [
+    __DIR__ . '/../site_fix-2',
+    __DIR__ . '/../site',
+    __DIR__ . '/../site '
+];
+
+$siteRoot = null;
+foreach ($siteRootCandidates as $candidate) {
+    if (is_dir($candidate)) {
+        $siteRoot = $candidate;
+        break;
+    }
+}
+
+if ($siteRoot === null) {
+    throw new RuntimeException('Aucun dossier web trouvé (site_fix-2, site ou site ).');
+}
+
+require_once $siteRoot . '/config.php';
+require_once $siteRoot . '/modele/Utilisateur.php';
+require_once $siteRoot . '/modele/Database.php';
 
 class TestUtilisateur {
     private $utilisateur;

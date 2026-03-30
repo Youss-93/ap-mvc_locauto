@@ -1,13 +1,4 @@
 <?php require_once 'vue/header.php'; ?>
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>Connexion</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
     <div class="container">
         <h1>Connexion</h1>
         
@@ -31,6 +22,4 @@
 
         <p>Pas encore inscrit ? <a href="index.php?controller=utilisateur&action=register">S'inscrire</a></p>
     </div>
-</body>
-</html>
 <?php require_once 'vue/footer.php'; ?>
