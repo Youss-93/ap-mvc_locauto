@@ -122,8 +122,8 @@ class VoitureControlleur {
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                // Gérer la disponibilité séparément
-                $disponibilite = isset($_POST['disponibilite']) ? 1 : 0;
+                // Gérer la disponibilité depuis le formulaire (0 ou 1)
+                $disponibilite = (isset($_POST['disponibilite']) && (int)$_POST['disponibilite'] === 1) ? 1 : 0;
     
                 $data = [
                     'id_voiture' => $id_voiture,
@@ -163,6 +163,36 @@ class VoitureControlleur {
         }
     
         require_once 'vue/voiture.modifier.php';
+    }
+
+    public function changerDisponibilite() {
+        if (!isset($_SESSION['utilisateur']) || $_SESSION['role'] !== 'admin') {
+            $_SESSION['message'] = "Action non autorisée";
+            $_SESSION['message_type'] = "danger";
+            header('Location: index.php?controller=voiture&action=liste');
+            exit();
+        }
+
+        $id_voiture = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $etat = filter_input(INPUT_GET, 'etat', FILTER_VALIDATE_INT);
+
+        if (!$id_voiture || ($etat !== 0 && $etat !== 1)) {
+            $_SESSION['message'] = "Paramètres invalides";
+            $_SESSION['message_type'] = "danger";
+            header('Location: index.php?controller=voiture&action=liste');
+            exit();
+        }
+
+        if ($this->voitureModel->modifierDisponibilite($id_voiture, $etat)) {
+            $_SESSION['message'] = $etat ? "Véhicule rendu disponible" : "Véhicule marqué non disponible";
+            $_SESSION['message_type'] = "success";
+        } else {
+            $_SESSION['message'] = "Erreur lors de la mise à jour de la disponibilité";
+            $_SESSION['message_type'] = "danger";
+        }
+
+        header('Location: index.php?controller=voiture&action=liste');
+        exit();
     }
          
 
@@ -280,16 +310,33 @@ public function uploadImage($file) {
             mkdir($target_dir, 0755, true);
         }
 
-        // Extraire l'extension du fichier d'origine
+        // Conserver le nom d'origine (version nettoyée), puis gérer les collisions
+        $originalName = pathinfo($file['name'], PATHINFO_FILENAME);
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        
-        // Créer un nom unique pour l'image
-        $newFileName = uniqid('voiture_') . '.' . $extension;
+
+        // Nettoyage: lettres/chiffres/._- uniquement, espaces => tirets
+        $safeBaseName = preg_replace('/\s+/', '-', $originalName);
+        $safeBaseName = preg_replace('/[^A-Za-z0-9._-]/', '', $safeBaseName);
+        $safeBaseName = trim($safeBaseName, '.-_');
+
+        if ($safeBaseName === '') {
+            $safeBaseName = 'voiture';
+        }
+
+        $newFileName = $safeBaseName . ($extension ? '.' . $extension : '');
         $target_file = $target_dir . $newFileName;
+
+        // Si un fichier du même nom existe déjà, ajouter un suffixe numérique
+        $counter = 1;
+        while (file_exists($target_file)) {
+            $newFileName = $safeBaseName . '-' . $counter . ($extension ? '.' . $extension : '');
+            $target_file = $target_dir . $newFileName;
+            $counter++;
+        }
 
         // Copier le fichier vers le dossier de destination
         if (copy($file['tmp_name'], $target_file)) {
-            return $newFileName; // Retourner uniquement le nom du fichier
+            return $newFileName; // Retourner le nom final (proche de l'original)
         }
 
         throw new Exception("Erreur lors de la copie du fichier.");

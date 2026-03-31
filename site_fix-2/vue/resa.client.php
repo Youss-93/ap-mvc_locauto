@@ -18,7 +18,13 @@
             <?php foreach($reservations as $reservation): ?>
                 <div class="reservation-card">
                     <div class="car-image">
-                        <img src="assets/photos/voitures/<?= htmlspecialchars($reservation['image_loc']) ?>" 
+                        <?php
+                            $imageLoc = (string)($reservation['image_loc'] ?? '');
+                            $imageSrc = (strpos($imageLoc, 'assets/') === 0 || preg_match('#^https?://#', $imageLoc))
+                                ? $imageLoc
+                                : 'assets/photos/voitures/' . ltrim($imageLoc, '/');
+                        ?>
+                        <img src="<?= htmlspecialchars($imageSrc) ?>" 
                              alt="<?= htmlspecialchars($reservation['marque'] . ' ' . $reservation['modele']) ?>">
                     </div>
                     <div class="reservation-info">

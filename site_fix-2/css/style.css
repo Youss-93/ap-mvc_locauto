@@ -390,6 +390,29 @@ body {
   letter-spacing: 0.03em;
 }
 
+/* Statut disponibilité sur cartes voitures */
+.dispo-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.82rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.dispo-pill--ok {
+  background: rgba(62, 207, 142, 0.14);
+  color: var(--success);
+  border: 1px solid rgba(62, 207, 142, 0.34);
+}
+
+.dispo-pill--ko {
+  background: rgba(240, 92, 92, 0.12);
+  color: var(--danger);
+  border: 1px solid rgba(240, 92, 92, 0.3);
+}
+
 /* ═══════════════════════════════════════════════
    BOUTONS
    ═══════════════════════════════════════════════ */
@@ -494,6 +517,65 @@ body {
   color: var(--text);
   border-color: var(--border);
   transform: translateY(-2px);
+}
+
+/* Boutons de bascule disponibilité admin */
+.btn-disponible {
+  background: rgba(62, 207, 142, 0.14);
+  color: var(--success);
+  border: 1px solid rgba(62, 207, 142, 0.34);
+}
+
+.voiture-actions .btn-disponible,
+.btn-group .btn-disponible {
+  background: rgba(62, 207, 142, 0.14) !important;
+  color: var(--success) !important;
+  border: 1px solid rgba(62, 207, 142, 0.34) !important;
+}
+
+.btn-disponible:visited {
+  color: var(--success);
+}
+
+.btn-disponible:focus-visible {
+  outline: 2px solid rgba(62, 207, 142, 0.45);
+  outline-offset: 2px;
+}
+
+.btn-disponible:hover {
+  background: var(--success);
+  color: var(--noir);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(62, 207, 142, 0.25);
+}
+
+.btn-indisponible {
+  background: rgba(240, 92, 92, 0.12);
+  color: var(--danger);
+  border: 1px solid rgba(240, 92, 92, 0.3);
+}
+
+.voiture-actions .btn-indisponible,
+.btn-group .btn-indisponible {
+  background: rgba(240, 92, 92, 0.12) !important;
+  color: var(--danger) !important;
+  border: 1px solid rgba(240, 92, 92, 0.3) !important;
+}
+
+.btn-indisponible:visited {
+  color: var(--danger);
+}
+
+.btn-indisponible:focus-visible {
+  outline: 2px solid rgba(240, 92, 92, 0.45);
+  outline-offset: 2px;
+}
+
+.btn-indisponible:hover {
+  background: var(--danger);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(240, 92, 92, 0.3);
 }
 
 .btn-group {

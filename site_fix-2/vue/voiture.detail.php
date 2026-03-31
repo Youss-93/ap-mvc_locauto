@@ -59,6 +59,19 @@
                                        class="btn btn-warning">
                                         Modifier
                                     </a>
+                                    <?php if($voiture['disponibilité']): ?>
+                                        <a href="index.php?controller=voiture&action=changerDisponibilite&id=<?= $voiture['id_voiture'] ?>&etat=0"
+                                           class="btn btn-danger btn-indisponible"
+                                           onclick="return confirm('Marquer ce véhicule comme non disponible ?');">
+                                            Rendre indisponible
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="index.php?controller=voiture&action=changerDisponibilite&id=<?= $voiture['id_voiture'] ?>&etat=1"
+                                           class="btn btn-success btn-disponible"
+                                           onclick="return confirm('Rendre ce véhicule disponible ?');">
+                                            Rendre disponible
+                                        </a>
+                                    <?php endif; ?>
                                 <?php endif; ?>
 
                                 <a href="index.php?controller=voiture&action=liste" 

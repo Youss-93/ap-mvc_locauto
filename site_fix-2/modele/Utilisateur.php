@@ -84,8 +84,56 @@ class Utilisateur {
     }
 
     public function supprimer($id) {
-        $sql = "DELETE FROM utilisateur WHERE id_utilisateur=:id";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':id'=>$id]);
+        try {
+            $this->db->beginTransaction();
+
+            // Conserver les voitures impactées avant suppression (les réservations client seront supprimées en cascade)
+            $sqlVoituresImpactees = "SELECT DISTINCT voiture_resa
+                                    FROM reservation
+                                    WHERE client_resa = :id
+                                    AND statut_reservation IN ('en attente', 'confirmée')";
+            $stmtVoitures = $this->db->prepare($sqlVoituresImpactees);
+            $stmtVoitures->execute([':id' => $id]);
+            $voituresImpactees = $stmtVoitures->fetchAll(PDO::FETCH_COLUMN);
+
+            $sql = "DELETE FROM utilisateur WHERE id_utilisateur = :id";
+            $stmt = $this->db->prepare($sql);
+            $deleted = $stmt->execute([':id' => $id]);
+
+            if (!$deleted) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            if (!empty($voituresImpactees)) {
+                $ids = array_map('intval', $voituresImpactees);
+                $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+                // Recalculer la disponibilité réelle selon les réservations restantes
+                $sqlDisponibilite = "UPDATE voiture v
+                                    SET v.disponibilité = CASE
+                                        WHEN EXISTS (
+                                            SELECT 1
+                                            FROM reservation r
+                                            WHERE r.voiture_resa = v.id_voiture
+                                            AND r.statut_reservation IN ('en attente', 'confirmée')
+                                            AND r.date_fin >= CURRENT_DATE()
+                                        ) THEN 0
+                                        ELSE 1
+                                    END
+                                    WHERE v.id_voiture IN ($placeholders)";
+                $stmtDisponibilite = $this->db->prepare($sqlDisponibilite);
+                $stmtDisponibilite->execute($ids);
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            error_log($e->getMessage());
+            return false;
+        }
     }
 }

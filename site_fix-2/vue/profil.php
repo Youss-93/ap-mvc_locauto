@@ -32,40 +32,42 @@
                         <p><strong>Téléphone :</strong> <?= htmlspecialchars($utilisateur['num_tel'] ?? 'Non renseigné') ?></p>
                     </div>
 
-                    <div class="reservations mt-4">
-                        <h2 class="h4">Mes réservations</h2>
-                        <?php if(!empty($reservations)): ?>
-                            <?php foreach($reservations as $reservation): ?>
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <?= htmlspecialchars($reservation['marque'] . ' ' . $reservation['modele']) ?>
-                                        </h5>
-                                        <p class="card-text">
-                                            Du <?= date('d/m/Y', strtotime($reservation['date_debut'])) ?>
-                                            au <?= date('d/m/Y', strtotime($reservation['date_fin'])) ?>
-                                        </p>
-                                        <p class="card-text">
-                                            <strong>Prix total :</strong> 
-                                            <?= htmlspecialchars($reservation['prix_total']) ?> €
-                                        </p>
-                                        <span class="badge bg-<?= $reservation['statut_reservation'] === 'confirmée' ? 'success' : 
-                                            ($reservation['statut_reservation'] === 'en attente' ? 'warning' : 'danger') ?>">
-                                            <?= htmlspecialchars(ucfirst($reservation['statut_reservation'])) ?>
-                                        </span>
-                                        <a href="index.php?controller=reservation&action=detail&id=<?= $reservation['id_reservation'] ?>" 
-                                           class="btn btn-primary btn-sm">
-                                            Voir détails
-                                        </a>
+                    <?php if(($_SESSION['role'] ?? null) !== 'admin'): ?>
+                        <div class="reservations mt-4">
+                            <h2 class="h4">Mes réservations</h2>
+                            <?php if(!empty($reservations)): ?>
+                                <?php foreach($reservations as $reservation): ?>
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <?= htmlspecialchars($reservation['marque'] . ' ' . $reservation['modele']) ?>
+                                            </h5>
+                                            <p class="card-text">
+                                                Du <?= date('d/m/Y', strtotime($reservation['date_debut'])) ?>
+                                                au <?= date('d/m/Y', strtotime($reservation['date_fin'])) ?>
+                                            </p>
+                                            <p class="card-text">
+                                                <strong>Prix total :</strong> 
+                                                <?= htmlspecialchars($reservation['prix_total']) ?> €
+                                            </p>
+                                            <span class="badge bg-<?= $reservation['statut_reservation'] === 'confirmée' ? 'success' : 
+                                                ($reservation['statut_reservation'] === 'en attente' ? 'warning' : 'danger') ?>">
+                                                <?= htmlspecialchars(ucfirst($reservation['statut_reservation'])) ?>
+                                            </span>
+                                            <a href="index.php?controller=reservation&action=detail&id=<?= $reservation['id_reservation'] ?>" 
+                                               class="btn btn-primary btn-sm">
+                                                Voir détails
+                                            </a>
+                                        </div>
                                     </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="alert alert-info">
+                                    Vous n'avez pas encore de réservations.
                                 </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <div class="alert alert-info">
-                                Vous n'avez pas encore de réservations.
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

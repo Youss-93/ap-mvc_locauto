@@ -72,6 +72,14 @@
             </div>
 
             <div class="form-group">
+                <label for="disponibilite">Disponibilité :</label>
+                <select id="disponibilite" name="disponibilite" class="form-control" required>
+                    <option value="1" <?= !empty($voiture['disponibilité']) ? 'selected' : '' ?>>Disponible</option>
+                    <option value="0" <?= empty($voiture['disponibilité']) ? 'selected' : '' ?>>Non disponible</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label>Image actuelle :</label>
                 <?php if($voiture['image_loc']): ?>
                     <?php $imagePath = (strpos($voiture['image_loc'], 'assets/') === 0) ? $voiture['image_loc'] : 'assets/photos/voitures/' . $voiture['image_loc']; ?>

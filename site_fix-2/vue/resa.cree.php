@@ -14,7 +14,13 @@
     <div class="card mb-4">
         <div class="card-body" style="display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap;">
             <?php if(!empty($voiture['image_loc'])): ?>
-                <img src="assets/photos/voitures/<?= htmlspecialchars($voiture['image_loc']) ?>"
+                <?php
+                    $imageLoc = (string)$voiture['image_loc'];
+                    $imageSrc = (strpos($imageLoc, 'assets/') === 0 || preg_match('#^https?://#', $imageLoc))
+                        ? $imageLoc
+                        : 'assets/photos/voitures/' . ltrim($imageLoc, '/');
+                ?>
+                <img src="<?= htmlspecialchars($imageSrc) ?>"
                      alt="<?= htmlspecialchars($voiture['marque'] . ' ' . $voiture['modele']) ?>"
                      style="width:180px; height:120px; object-fit:cover; border-radius:8px;">
             <?php endif; ?>

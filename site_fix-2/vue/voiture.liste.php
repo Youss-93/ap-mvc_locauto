@@ -39,6 +39,11 @@
                     <p class="annee">Année : <?= htmlspecialchars($voiture['année']) ?></p>
                     <p class="prix">Prix/jour : <strong><?= htmlspecialchars($voiture['prix_jour']) ?> €</strong></p>
                     <p class="caution">Caution : <?= htmlspecialchars($voiture['caution']) ?> €</p>
+                    <p>
+                        <span class="dispo-pill <?= !empty($voiture['disponibilité']) ? 'dispo-pill--ok' : 'dispo-pill--ko' ?>">
+                            <?= !empty($voiture['disponibilité']) ? 'Disponible' : 'Non disponible' ?>
+                        </span>
+                    </p>
 
                     <!-- Catégories -->
                     <?php if(!empty($voiture['categories'])): ?>
@@ -65,6 +70,15 @@
                         <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                             <a href="index.php?controller=voiture&action=modifier&id=<?= $voiture['id_voiture'] ?>"
                                class="btn btn-warning btn-sm">Modifier</a>
+                                     <?php if($voiture['disponibilité']): ?>
+                                          <a href="index.php?controller=voiture&action=changerDisponibilite&id=<?= $voiture['id_voiture'] ?>&etat=0"
+                                                                                class="btn btn-danger btn-indisponible btn-sm"
+                                              onclick="return confirm('Marquer ce véhicule comme non disponible ?');">Rendre indisponible</a>
+                                     <?php else: ?>
+                                          <a href="index.php?controller=voiture&action=changerDisponibilite&id=<?= $voiture['id_voiture'] ?>&etat=1"
+                                                                                class="btn btn-success btn-disponible btn-sm"
+                                              onclick="return confirm('Rendre ce véhicule disponible ?');">Rendre disponible</a>
+                                     <?php endif; ?>
                             <a href="index.php?controller=voiture&action=supprimer&id=<?= $voiture['id_voiture'] ?>"
                                class="btn btn-danger btn-sm"
                                onclick="return confirm('Supprimer cette voiture ?')">Supprimer</a>
