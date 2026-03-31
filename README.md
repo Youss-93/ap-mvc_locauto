@@ -303,6 +303,17 @@ curl -I http://locauto.test
 # Réponse attendue: HTTP/1.1 200 OK
 ```
 
+### Comptes de test
+
+Pour faciliter les tests rapides de l'application:
+
+- **Admin**
+  - Email: adminHY93@hotmail.fr
+  - Mot de passe: HuseyinY123
+- **Client**
+  - Email: teste6@turgot.com
+  - Mot de passe: siotestE6
+
 ### Arrêter l'application
 
 ```bash
