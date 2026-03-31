@@ -1,0 +1,51 @@
+# Fichiers système macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# PHP
+vendor/
+composer.lock
+.env
+.env.local
+
+# Logs et caches
+*.log
+cache/
+tmp/
+
+# Node (si utilise)
+node_modules/
+npm-debug.log
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*~
+
+# Uploads locaux (non versionner)
+uploads/
+site_fix-2/assets/photos/voitures/*.jpg
+site_fix-2/assets/photos/voitures/*.png
+
+# Base de données locale
+*.sqlite
+*.sqlite3
