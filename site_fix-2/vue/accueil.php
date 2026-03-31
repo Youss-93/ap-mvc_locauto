@@ -8,6 +8,17 @@
             <div class="alert"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
 
+        <section class="historique">
+            <h2>Notre Histoire</h2>
+            <p>Bienvenue chez LocAuto, votre partenaire de confiance en location de véhicules depuis plus de 10 ans. 
+            Notre mission est de vous offrir une expérience de location simple, transparente et sans complications.</p>
+            <p>Avec une flotte de véhicules modernes et bien entretenus, nous nous engageons à fournir des services 
+            de qualité supérieure à des tarifs compétitifs. Notre équipe dévouée est toujours disponible pour répondre 
+            à vos besoins et vous assurer une expérience de location inoubliable.</p>
+            <p>Découvrez nos véhicules disponibles ci-dessous et trouvez la voiture parfaite pour votre prochain voyage.</p>
+        </section>
+
+        <h2>Véhicules Disponibles</h2>
         <div class="voitures-grid">
             <?php foreach($voitures as $voiture): ?>
                 <div class="voiture-card">
