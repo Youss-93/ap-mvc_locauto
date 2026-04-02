@@ -89,7 +89,7 @@ L'application est conçue selon les principes SOLID et suit l'architecture MVC p
 
 | Outil                   | Utilisation                                |
 | ----------------------- | ------------------------------------------ |
-| **Herd** (Laravel Herd) | Serveur PHP local `locauto.test`           |
+| **Herd**                | Serveur PHP local `locauto.test`           |
 | **PHPUnit-like tests**  | Suite de tests unitaires maison (31 tests) |
 | **Git**                 | Versionning du code                        |
 
