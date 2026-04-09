@@ -16,7 +16,9 @@
             
             <?php if(isset($_SESSION['utilisateur'])): ?>
                 <?php if($_SESSION['role'] === 'admin'): ?>
+                    <li><a href="index.php?controller=reservation&action=liste">Réservations à gérer</a></li>
                     <li><a href="index.php?controller=voiture&action=ajouter">Ajouter une voiture</a></li>
+                    <li><a href="index.php?controller=statistique&action=index">Statistiques</a></li>
                 <?php endif; ?>
                 <?php if($_SESSION['role'] !== 'admin'): ?>
                     <li><a href="index.php?controller=reservation&action=liste">Mes réservations</a></li>

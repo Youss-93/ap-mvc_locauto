@@ -401,6 +401,24 @@ ALTER TABLE `Voiture_Categorie`
   ADD CONSTRAINT `voiture_categorie_ibfk_1` FOREIGN KEY (`id_voiture`) REFERENCES `Voiture` (`id_voiture`) ON DELETE CASCADE,
   ADD CONSTRAINT `voiture_categorie_ibfk_2` FOREIGN KEY (`id_categorie`) REFERENCES `Categorie` (`id_categorie`) ON DELETE CASCADE;
 
+-- --------------------------------------------------------
+-- Vue : statistiques des catégories les plus réservées
+-- Compte toutes les réservations liées aux voitures
+-- (sans filtrer uniquement le statut "confirmée")
+-- --------------------------------------------------------
+DROP VIEW IF EXISTS `stats_categories`;
+
+CREATE VIEW `stats_categories` AS
+SELECT
+  c.id_categorie,
+  c.libelle_categorie,
+  COUNT(r.id_reservation) AS nb_reservations
+FROM Categorie c
+LEFT JOIN Voiture_Categorie vc ON vc.id_categorie = c.id_categorie
+LEFT JOIN Voiture v ON v.id_voiture = vc.id_voiture
+LEFT JOIN Reservation r ON r.voiture_resa = v.id_voiture
+GROUP BY c.id_categorie, c.libelle_categorie;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

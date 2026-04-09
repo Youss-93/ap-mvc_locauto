@@ -111,4 +111,40 @@ class Categorie {
         $stmt->execute(['id_categorie' => $id_categorie]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Récupère les statistiques de réservations par catégorie
+     */
+    public function getStatistiquesReservations() {
+        $sql = "SELECT id_categorie, libelle_categorie, nb_reservations
+                FROM stats_categories
+                ORDER BY nb_reservations DESC, libelle_categorie ASC";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Fallback si la vue SQL n'existe pas encore dans la base.
+            $sqlFallback = "SELECT
+                                c.id_categorie,
+                                c.libelle_categorie,
+                                COUNT(r.id_reservation) AS nb_reservations
+                            FROM categorie c
+                            LEFT JOIN voiture_categorie vc ON vc.id_categorie = c.id_categorie
+                            LEFT JOIN voiture v ON v.id_voiture = vc.id_voiture
+                            LEFT JOIN reservation r ON r.voiture_resa = v.id_voiture
+                            GROUP BY c.id_categorie, c.libelle_categorie
+                            ORDER BY nb_reservations DESC, c.libelle_categorie ASC";
+
+            try {
+                $stmt = $this->db->prepare($sqlFallback);
+                $stmt->execute();
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e2) {
+                error_log($e2->getMessage());
+                return [];
+            }
+        }
+    }
 }
